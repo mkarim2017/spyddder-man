@@ -1,0 +1,30 @@
+{
+  "command":"/home/ops/verdi/ops/spyddder-man/sling.py",
+  "disk_usage":"50GB",
+  "params" : [
+  {
+  "name": "download_url",
+  "destination": "positional"
+  },
+  {
+  "name": "repo_url",
+  "destination": "positional"
+  },
+  {
+  "name": "prod_name",
+  "destination": "positional"
+  },
+  {
+  "name": "file_type",
+  "destination": "positional"
+  },
+  {
+  "name": "prod_date",
+  "destination": "positional"
+  },
+  {
+  "name": "oauth_url",
+  "destination": "positional"
+  }
+  ]
+}

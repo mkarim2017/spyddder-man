@@ -1,0 +1,30 @@
+{
+  "label" : "Spyddder-man Sling OAuth",
+  "allowed_accounts": [ "ops" ],
+  "params": [
+  {
+  "name": "download_url",
+  "from": "dataset_jpath:_source.download_url"
+  },
+  {
+  "name": "repo_url",
+  "from": "dataset_jpath:_source.repo_url"
+  },
+  {
+  "name": "prod_name",
+  "from": "dataset_jpath:_source.prod_name"
+  },
+  {
+  "name": "file_type",
+  "from": "dataset_jpath:_source.file_type"
+  },
+  {
+  "name": "prod_date",
+  "from": "dataset_jpath:_source.prod_date"
+  },
+  {
+  "name": "oauth_url",
+  "from": "dataset_jpath:_source.oauth_url"
+  }
+  ]
+}

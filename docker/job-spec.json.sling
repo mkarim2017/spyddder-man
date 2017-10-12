@@ -1,0 +1,35 @@
+{
+  "command":"/home/ops/verdi/ops/spyddder-man/sling.py",
+  "imported_worker_files":{"/home/ops/.netrc":"/home/ops/.netrc"},
+  "disk_usage":"50GB",
+  "params" : [
+  {
+  "name": "download_url",
+  "destination": "positional"
+  },
+  {
+  "name": "repo_url",
+  "destination": "positional"
+  },
+  {
+  "name": "prod_name",
+  "destination": "positional"
+  },
+  {
+  "name": "file_type",
+  "destination": "positional"
+  },
+  {
+  "name": "prod_date",
+  "destination": "positional"
+  },
+  {
+  "name": "prod_met",
+  "destination": "context"
+  },
+  {
+  "name": "options",
+  "destination": "positional"
+  }
+  ]
+}

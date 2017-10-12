@@ -1,0 +1,546 @@
+commit 8e5cc647bfad03a6fc7fdad30620b8fb4f17a083
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Mon Jun 19 15:59:33 2017 +0000
+
+    set label and allowed_accounts
+
+commit 10f522e02d4e349cf788fd8f6dceac1a35cb76fc
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Thu May 25 14:20:10 2017 +0000
+
+    sync release with qquery
+
+commit ab5b751d0d6e1814c2796db82b3523d4dea4b115
+Author: jlinick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Mon May 1 21:50:01 2017 +0000
+
+    update release to sync with qquery
+
+commit d1b49e07bf66a931d1aed390904c24b2aa2c51e5
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Mon Mar 27 22:00:56 2017 +0000
+
+    propagate geojson from AOI to incoming dataset
+
+commit 1dba636276d5e2a5009ded60e3be660b5f2ed850
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Mon Mar 27 19:13:02 2017 +0000
+
+    add current release
+
+commit 99144ca40eac25d9cb17f9a69d35907950e62567
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Tue Mar 14 11:38:13 2017 -0700
+
+    remove pge-latest tag from Dockerfile
+
+commit f6a8d17d8737aedcd7a0f9faa1d1437918753df2
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Mar 14 18:22:05 2017 +0000
+
+    standardize on hysds/pge-base:latest
+
+commit b732decdcc88863bca07ba40461185524a23b1f0
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Wed Mar 8 16:06:52 2017 +0000
+
+    add change for release tag
+
+commit 7975ff265392bee6deb84bd56846ffcb9ec28757
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Fri Feb 10 15:45:25 2017 +0000
+
+    set correct job-spec param for disk_usage and increase it to 50GB
+
+commit 952c166c3634e34e6551ee3a91a9003fa2f9eafa
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Feb 9 23:17:08 2017 +0000
+
+    add download url to metadata
+
+commit 76041ca75bda6773877d97f8659dd55e917e3d12
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Feb 9 22:48:54 2017 +0000
+
+    fix bug where extract was overwriting *.dataset.json with incoming's dataset format
+    
+    Updated to skip writing if extractor already generated the *.dataset.json.
+
+commit 7575eb39a53c04fd563982198d36bcfdc61c4751
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Wed Feb 8 20:42:19 2017 +0000
+
+    remove job-spec and hysds-io configs; extract is domain specific and needs to be in domain-specific container (e.g. ISCE)
+
+commit 1c0bbfd8b61fac32f3cd6db852d627c282e9e49d
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Wed Feb 8 19:24:19 2017 +0000
+
+    remove population of context; done by product_ingest
+
+commit 23703cf3524e238279e8abe703d667872ebf2242
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Wed Feb 8 16:32:25 2017 +0000
+
+    add metadata needed for extraction and remove explicit job submission for extract
+    
+    Extract jobs will be triggered by user rules in tosca.
+
+commit 596fac28d05ab18cd265972324f816e4a32ba5cb
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Tue Feb 7 22:53:05 2017 -0800
+
+    fix to proper job worker queue
+
+commit 1159c71a5a05bd40bbb0cc5de82666f6736948a3
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Tue Feb 7 22:52:37 2017 -0800
+
+    update job spec for localize
+
+commit 896a6c5271f4d9ff8449686eb72818e2ced19c2d
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Tue Feb 7 22:52:13 2017 -0800
+
+    update localize_url
+
+commit a93b44d4576dc2d334a6972e79660a9ea6164884
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Tue Feb 7 17:51:21 2017 -0800
+
+    queue extract params format
+
+commit 3202fbd0cef4b3367ff97b2cf77aa603264ef1b5
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Tue Feb 7 17:39:45 2017 -0800
+
+    import netrc
+
+commit a50d053d7784b6635531fbb5e69c0718441311b4
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Mon Feb 6 23:49:06 2017 -0800
+
+    jlinick: loading sling params from context json as string
+
+commit d58a2a137f884db79862191c2932f6660b270b2a
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Mon Feb 6 15:48:47 2017 -0800
+
+    update json loads of context.json file
+
+commit 958e0ec5ea1163d85a5e71fec807c24a1050eecd
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Mon Feb 6 15:35:33 2017 -0800
+
+    jlinick: remove prod_met from command line requirements
+
+commit 6f032e3c7b1423f7e2bca761168018d6da824a85
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Mon Feb 6 15:21:44 2017 -0800
+
+    fixing end quote
+
+commit 0e6a852ca331a5020577df080e6657015da36081
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Mon Feb 6 14:05:54 2017 -0800
+
+    jlinick: prod_met to pull from context
+
+commit 6f1dd3f06daff1a1367ec5a045954fa62564aba7
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Mon Feb 6 13:42:25 2017 -0800
+
+    jlinick: load from prod_met
+
+commit 85e4ef822d253d77c65bb0c78e1edd667c43099b
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Mon Feb 6 07:25:42 2017 -0800
+
+    set imports
+
+commit 154c89f566ba1fff615b919d7638c36cac89c397
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Wed Feb 1 14:47:47 2017 -0800
+
+    updated to CMD from ENTRYPOINT
+
+commit 9b2325f17fa62cf4f17169961ce4a7334d73d473
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Tue Jan 31 17:02:08 2017 -0800
+
+    complete extract v2 job submission
+
+commit d4efe61e6292199607e3ccd0d2b3441c656284ae
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Mon Jan 30 10:40:16 2017 -0800
+
+    adding .netrc files
+
+commit 2b877c4f34a216b84d458236b045e027151ef9ba
+Author: Justin P Linick <Justin.P.Linick@jpl.nasa.gov>
+Date:   Fri Jan 27 12:30:36 2017 -0800
+
+    fixed submitter tag
+
+commit 4c98a1dce7b122a50c560ba45fac056606f32713
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Fri Jan 27 20:20:59 2017 +0000
+
+    fixed sling option arguments for hysds-io and job-spec wiring
+
+commit cf7d0984ae7b36843987a0a4c1099d45e628c154
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Jan 19 07:22:11 2017 +0000
+
+    fix apostrophe error
+
+commit 5b1dc67794f701a28797e046c11245f0d0b53ce8
+Author: jlinick <jlinick@jpl.nasa.gov>
+Date:   Thu Jan 19 06:49:05 2017 +0000
+
+    jlinick: updating wiring for sling jobs for hysds-org/general#275
+
+commit 4bfb043a07c237005054b0485ce4dd33986cda07
+Merge: 6bea122 1474ae7
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Tue Jan 17 19:34:46 2017 +0000
+
+    Merge branch 'v2' of https://github.jpl.nasa.gov/hysds-org/spyddder-man into v2
+
+commit 6bea122225e0b28ac0fee2003fefcf50dd1e6820
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Tue Jan 17 19:34:08 2017 +0000
+
+    jlinick: adding dockerfiles for hysds-org/general#275
+
+commit 1474ae7ef79ab572eccb1d407ca235e390ae39c9
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Thu Dec 8 23:33:59 2016 +0000
+
+    mstarch: fixing extract to use full products if supplied
+
+commit 6daee02c0ad93afbfaa305a63c3f54755529832d
+Merge: 63b072a 5d50c3b
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Wed Dec 7 22:53:14 2016 +0000
+
+    Merge branch 'v2' of https://github.jpl.nasa.gov/hysds-org/spyddder-man into v2
+
+commit 63b072a3eeb8a6b42eabd4c66c103212f449cef1
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Wed Dec 7 22:52:33 2016 +0000
+
+    mstarch: wokring v2 prototype
+
+commit e2fbdb2b3a6c2fe682c4582917504c82f9fbce2f
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Wed Dec 7 21:42:46 2016 +0000
+
+    mstarch: updating to v2 products
+
+commit 5d50c3b8979e8490a9aa3b3a03e0b9e2512482a9
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Mon Nov 7 19:31:24 2016 +0000
+
+    initial implementation of nomenclature change from "product" to "dataset"
+
+commit 4670c54032c814ea41e061594ed2488040ea897a
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Oct 18 18:59:38 2016 +0000
+
+    prefix hysds files with _
+
+commit c49926b0d2f285c772696d3796224b2cce769f7f
+Author: mcayanan <michael.cayanan@jpl.nasa.gov>
+Date:   Wed Jun 15 17:22:42 2016 +0000
+
+    Add bz2 and gz as valid tar types
+
+commit 8d96e106324df1d057765556ca42a784933f66df
+Author: mcayanan <michael.cayanan@jpl.nasa.gov>
+Date:   Wed May 25 15:51:45 2016 +0000
+
+    Updated param name to prod_met
+
+commit d4a507d664d1369e6ef2248831dc658f0311a2a0
+Author: mcayanan <michael.cayanan@jpl.nasa.gov>
+Date:   Fri May 20 22:36:07 2016 +0000
+
+    Updated spyddder sling worker to accept context as a json instead of a file
+
+commit 8154fc82a732458dc64a0701625c129d9bf52227
+Author: mcayanan <michael.cayanan@jpl.nasa.gov>
+Date:   Wed May 18 01:47:09 2016 +0000
+
+    Modified sling.py to support passing in of the context.json file
+
+commit 0e6dea6ad653e6cbb0df047d3ecdec3b11da75fe
+Author: mcayanan <michael.cayanan@jpl.nasa.gov>
+Date:   Tue May 17 22:17:15 2016 +0000
+
+    Modified sling.py to treat incoming data as a dataset
+
+commit ef280a84d17709a62478abbad09f469ee3d70a59
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Fri Mar 25 01:38:56 2016 +0000
+
+    handle AWS creds in url
+
+commit 1256ecf0ec7020918b980d3af04eb9ac32debffb
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Mar 15 03:56:00 2016 +0000
+
+    import re
+
+commit 115b610159f151f27f1fdf43fc48e555f4edd272
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Mar 15 02:53:35 2016 +0000
+
+    iterate over region and endpoint
+
+commit a8f530c03b3c4b8793cc7e54098584bf557fb485
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Mar 15 02:41:12 2016 +0000
+
+    implement key existence check
+
+commit 4005dc4bc994c1116b5d9ebcc3ae9b2da930bf53
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Dec 10 19:19:47 2015 +0000
+
+    dump error and traceback for HySDS monitoring
+
+commit 02acb6e578875f4ada1b51e3133fd45e5fdea1fb
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Mon Dec 7 18:35:24 2015 +0000
+
+    mstarch: use open instead of TarFile class to autodetect compression
+
+commit 9073748e319eec0903c44ceaa7d10119a0fa2fd8
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Nov 19 13:38:48 2015 -0800
+
+    mstarch: integrated osaka metrics to sling
+
+commit b30e1e031f592ce593690d9031e472e97377987b
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Sat Oct 24 17:04:54 2015 +0000
+
+    clean up after successful sling
+
+commit cb592bc93d16859d38adf8c4ca75249f3ca9f72e
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Sat Oct 24 16:57:16 2015 +0000
+
+    pass on job priority from sling to extract
+
+commit 02687fa26b9c6d54f26bd4186149c3d5c495a022
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Sat Oct 24 10:10:16 2015 +0000
+
+    fix bug in checking for supported URL schemas
+
+commit db587a1600dbb825f73caae6ab0feabfa7b1906c
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Oct 15 14:55:05 2015 +0000
+
+    fix formatting
+
+commit cd625ccb984f48ead08c5aed5c1da7e4030cd508
+Merge: 6adf10d 04b9bb0
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Mon Oct 12 17:52:31 2015 +0000
+
+    Merge branch 'master' of github.jpl.nasa.gov:aria-hysds/spyddder-man into osaka-dev
+
+commit 6adf10dfcaaa9b119554ced61a8bcaad43f17deb
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Mon Oct 12 17:44:40 2015 +0000
+
+    mstarch: updates to add in osaka
+
+commit 04b9bb0898e5621e27c09572179a7469badb37cb
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Wed Sep 23 21:46:37 2015 +0000
+
+    update metadata if file was generated
+
+commit d173ac3eb7e207f503e92b92d3ec76f88922df15
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Sat Sep 19 18:38:25 2015 +0000
+
+    fixed logic for bad tar/zip file detection
+    
+    Added second-level verification of full zip/tar file extraction.
+
+commit 0445c802158d142e6db0b776b8fc5069468a84a5
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Wed Sep 9 15:13:30 2015 +0000
+
+    add missing parameter in extract.py example
+
+commit 3332f059e0c19921ce413e22aeb96ddac7035673
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Wed Sep 9 15:11:06 2015 +0000
+
+    update README
+
+commit 997c35dfb9a40da20d98b6abba1a05f3680ef825
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Sat Sep 5 00:26:35 2015 +0000
+
+    pass prod_date
+
+commit 127cdb0456256346e68e8f699131a6a2d90dcd86
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Sat Sep 5 00:15:11 2015 +0000
+
+    use underscore separator
+
+commit 20bd66a35d3f28a903a0002b9041353dbdc7d2ab
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Sat Sep 5 00:11:32 2015 +0000
+
+    add prod_date argument to pass date dir info
+
+commit bc3f60da45d58cbde256ea50fc9d24287ab82138
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Fri Sep 4 18:59:45 2015 +0000
+
+    extract.py
+
+commit 0d94dd148809031f5803f9f26ffbae81e53dbabe
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Wed Sep 2 17:32:44 2015 +0000
+
+    copy context file to product directory
+
+commit 20fcd649422ef80a0658c906609bfb27d6a4de2e
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Wed Sep 2 17:20:02 2015 +0000
+
+    add -f and -e options
+    
+    Add -f,--force option to force end-to-end operations of download from source,
+    verify, upload to repository and job submission.
+    Add -e,--force_extract option to force only job submission (for re-ingest).
+
+commit 6cab2a15784e0cdb180c9041dde5fb40e6a464fb
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Wed Sep 2 16:07:09 2015 +0000
+
+    pass context (metadata) on to spyddder-extract job
+
+commit d0b39477a8c688f9103c1521a0b814f0ba6583d2
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Sep 1 20:12:56 2015 +0000
+
+    if exists, assume already processed so that noe spyddder-extract jobs are submitted
+
+commit 727f8911a49ab58844e119e33d3f50a2ef5bc6f2
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Sep 1 16:32:15 2015 +0000
+
+    set oauth_url parameter
+
+commit 3cb2a9ca8edf0f356d3afefc806fc3741ad4ad79
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Sep 1 16:29:24 2015 +0000
+
+    added OAuth authentication capability
+
+commit a98ccadb969e1abcea59f42705cf488169ae7b52
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Mon Aug 31 18:05:55 2015 +0000
+
+    add verification of downloaded file and additional checks on url inputs
+
+commit 633e18ddf003ff52bfa29af160220c1615365963
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Fri Aug 28 21:16:24 2015 +0000
+
+    fixed bug setting job name
+
+commit ce65c720218b6342ccf80852ce357537469c4855
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Fri Aug 28 21:05:15 2015 +0000
+
+    set descriptive job name
+
+commit 084d590b8b19ff3a0365f75b3ea33b5d38baf63c
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Fri Aug 28 05:06:43 2015 +0000
+
+    updated doc
+
+commit a8722994122452d92a7a9994b64bdaf4b096c2dc
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Fri Aug 28 04:31:51 2015 +0000
+
+    load metadata from existing met json
+
+commit 428ff7baf1929b90ed2261ebc897ce87e25b7fe5
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Fri Aug 28 04:14:08 2015 +0000
+
+    check for existence of url and skip downloading
+
+commit 55f7a663d9897d7c22cc1a293abbd226d1dd1551
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Fri Aug 28 03:17:36 2015 +0000
+
+    modify dav urls to http urls
+
+commit 5f70f4d6cbc33cfcbafecdf118bf89b3ee94f7a9
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Fri Aug 28 00:28:23 2015 +0000
+
+    initial implementation of generalized extractor
+
+commit 4233f6226eca058169a8c2be7dc31770101778eb
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Aug 27 23:19:48 2015 +0000
+
+    submit job for extraction
+
+commit c5bc756eab837b48fc5ebee5ee11c1888e1cc181
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Aug 27 22:49:02 2015 +0000
+
+    use italics
+
+commit 03fb4f2ae9342ea73c43d861a50acf1748994479
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Aug 27 22:28:19 2015 +0000
+
+    update doc
+
+commit 841fb32be3559d0228ab78a45ca8c5e6579d315e
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Aug 27 22:27:10 2015 +0000
+
+    updated doc with help
+
+commit a6e733e138dc6acb67cbbb1d0c9c38d7a8d45650
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Aug 27 22:24:59 2015 +0000
+
+    implemented push to repo; updated doc
+
+commit ce9a411ef3c213b0bd14c8214201d69bbc8630b0
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Aug 27 21:44:24 2015 +0000
+
+    added requirements
+
+commit 5742f6f129abc1314b08766a2c2410254184e524
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Aug 27 21:41:07 2015 +0000
+
+    initial implementation of download job
+
+commit 55dcef50c128d624ecab0b6ad62e3ef62638c74e
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Aug 27 13:02:38 2015 -0700
+
+    Initial commit

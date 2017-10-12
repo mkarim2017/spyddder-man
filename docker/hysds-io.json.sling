@@ -1,0 +1,34 @@
+{
+  "label" : "Spyddder-man Sling",
+  "allowed_accounts": [ "ops" ],
+  "params": [
+  {
+  "name": "download_url",
+  "from": "submitter"
+  },
+  {
+  "name": "repo_url",
+  "from": "submitter"
+  },
+  {
+  "name": "prod_name",
+  "from": "submitter"
+  },
+  {
+  "name": "file_type",
+  "from": "submitter"
+  },
+  {
+  "name": "prod_date",
+  "from": "submitter"
+  },
+  {
+  "name": "prod_met",
+  "from": "submitter"
+  },
+  {
+  "name": "options",
+  "from": "submitter"
+  }
+  ]
+}
