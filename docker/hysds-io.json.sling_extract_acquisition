@@ -8,6 +8,11 @@
       "from": "value",
       "value": "sling_extract_acquisition.sf.xml"
     },
+    {
+      "name": "spyddder_extract_version",
+      "from": "value",
+      "value": "release-20180313"
+    },
     { 
       "name": "project",
       "from": "submitter",

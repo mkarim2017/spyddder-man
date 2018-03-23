@@ -29,18 +29,19 @@ def resolve_source(ctx_file):
     else:
         raise RuntimeError("Got status code {} from {}: {}".format(r.status_code, vertex_url, r.url))
 
-    return queue, url, ctx['archive_filename'], ctx['identifier'], time.strftime('%Y-%m-%d')
+    return ( ctx['spyddder_extract_version'], queue, url, ctx['archive_filename'], 
+             ctx['identifier'], time.strftime('%Y-%m-%d' )
 
 
-def extract_job(queue, localize_url, file, prod_name, prod_date, wuid=None, job_num=None):
+def extract_job(spyddder_extract_version, queue, localize_url, file, prod_name,
+                prod_date, wuid=None, job_num=None):
     """Map function for spyddder-man extract job."""
 
     if wuid is None or job_num is None:
         raise RuntimeError("Need to specify workunit id and job num.")
 
     # set job type and disk space reqs
-    job_version = "dev"
-    job_type = "job-spyddder-extract:{}".format(job_version)
+    job_type = "job-spyddder-extract:{}".format(spyddder_extract_version)
     disk_usage = "50GB"
 
     # set localize urls

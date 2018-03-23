@@ -19,6 +19,7 @@
           <context_file/>
         </sf:inputs>
         <sf:outputs>
+          <spyddder_extract_version/>
           <queue/>
           <localize_url/>
           <file/>
@@ -35,6 +36,7 @@
       
       <sf:process id="extract">
         <sf:inputs>
+          <spyddder_extract_version from="@#previous"/>
           <queue from="@#previous"/>
           <localize_url from="@#previous"/>
           <file from="@#previous"/>
