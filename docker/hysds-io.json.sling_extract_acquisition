@@ -1,7 +1,6 @@
 {     
   "submission_type": "iteration",
   "label": "Sling-Extract Dataset From Acquisition",
-  "recommended-queues": [ "system-jobs-queue" ],
   "allowed_accounts": [ "ops" ],
   "params" : [ 
     { 
