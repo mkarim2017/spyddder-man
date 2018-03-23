@@ -57,5 +57,6 @@ def extract_job(spyddder_extract_version, queue, localize_url, file, prod_name,
     # add workflow info
     job['payload']['_sciflo_wuid'] = wuid
     job['payload']['_sciflo_job_num'] = job_num
+    print("job: {}".format(json.dumps(job, indent=2)))
 
     return job
