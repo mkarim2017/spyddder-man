@@ -54,6 +54,10 @@ def extract_job(spyddder_extract_version, queue, localize_url, file, prod_name,
     }
     job = resolve_hysds_job(job_type, queue, params=params, job_name="%s-%s" % (job_type, prod_name))
 
+    # save to archive_filename if it doesn't match url basename
+    if os.path.basename(localize_url) != file:
+        job['payload']['localize_urls'][0]['local_path'] = file
+
     # add workflow info
     job['payload']['_sciflo_wuid'] = wuid
     job['payload']['_sciflo_job_num'] = job_num
