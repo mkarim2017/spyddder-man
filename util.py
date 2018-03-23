@@ -30,7 +30,7 @@ def resolve_source(ctx_file):
         raise RuntimeError("Got status code {} from {}: {}".format(r.status_code, vertex_url, r.url))
 
     return ( ctx['spyddder_extract_version'], queue, url, ctx['archive_filename'], 
-             ctx['identifier'], time.strftime('%Y-%m-%d' )
+             ctx['identifier'], time.strftime('%Y-%m-%d' ) )
 
 
 def extract_job(spyddder_extract_version, queue, localize_url, file, prod_name,
@@ -51,7 +51,7 @@ def extract_job(spyddder_extract_version, queue, localize_url, file, prod_name,
     }]
 
     # get container mappings and dependency images from job spec
-    job_spec_file = os.path.abspath(os.path.join(BASE_PATH, 'docker', 'job-spec.json.sling_extract_acquisition'))
+    job_spec_file = os.path.abspath(os.path.join(BASE_PATH, 'docker', 'job-spec.json.acquisition_localizer'))
     with open(job_spec_file) as f:
         job_spec = json.load(f)
     container_mappings = job_spec.get('imported_worker_files', {})
