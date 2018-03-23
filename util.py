@@ -80,7 +80,7 @@ def extract_job(spyddder_extract_version, queue, localize_url, file, prod_name,
             "prod_date": prod_date,
 
             # v2 cmd
-            "_command": "/home/ops/verdi/ops/spyddder-man/extract.py",
+            "_command": "/home/ops/verdi/ops/spyddder-man/extract.py '{}' '{}' '{}'".format(file, prod_name, prod_date),
 
             # disk usage
             "_disk_usage": disk_usage,

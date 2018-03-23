@@ -14,12 +14,12 @@
       "destination": "positional"
     },
     {
-      "name": "spyddder_extract_version",
-      "destination": "context"
-    },
-    {
         "name": "project",
         "destination": "context"
+    },
+    {
+      "name": "spyddder_extract_version",
+      "destination": "context"
     },
     {
         "name": "dataset_type",
