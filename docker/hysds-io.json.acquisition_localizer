@@ -18,7 +18,7 @@
     {
       "name": "spyddder_extract_version",
       "from": "submitter",
-      "type": "type",
+      "type": "text",
       "default": "release-20180313",
       "placeholder": "spyddder-man extract job version"
     },
