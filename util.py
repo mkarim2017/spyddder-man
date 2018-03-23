@@ -1,5 +1,5 @@
 #!/usr/bin/env python 
-import os, time, json, logging
+import os, time, json, requests, logging
 
 
 log_format = "[%(asctime)s: %(levelname)s/%(name)s/%(funcName)s] %(message)s"
@@ -17,21 +17,19 @@ def resolve_source(ctx_file):
     with open(ctx_file) as f:
         ctx = json.load(f)
 
-    # determine best url
-    best_url = ctx['download_url']
+    # determine best url and corresponding queue
+    vertex_url = "https://datapool.asf.alaska.edu/SLC/SA/{}.zip".format(ctx['identifier'])
+    r = requests.head(vertex_url, allow_redirects=True)
+    if r.status_code == 403:
+        url = r.url
+        queue = "{}-job_worker-small".format(ctx['project'])
+    elif r.status_code == 404:
+        url = ctx['download_url']
+        queue = "factotum-job_worker-scihub_throttled"
+    else:
+        raise RuntimeError("Got status code {} from {}: {}".format(r.status_code, vertex_url, r.url))
 
-    # determine queue
-    queue = "factotum-job_worker-scihub_throttled"
-
-    # prod date
-    prod_date = time.strftime('%Y-%m-%d')
-    
-    return ( queue,
-             best_url,
-             ctx['archive_filename'],
-             ctx['identifier'],
-             prod_date,
-           )
+    return queue, url, ctx['archive_filename'], ctx['identifier'], time.strftime('%Y-%m-%d')
 
 
 def extract_job(queue, localize_url, file, prod_name, prod_date, wuid=None, job_num=None):
