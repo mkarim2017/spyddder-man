@@ -12,6 +12,23 @@ logger = logging.getLogger(os.path.splitext(os.path.basename(__file__))[0])
 BASE_PATH = os.path.dirname(__file__)
 
 
+def resolve_s1_slc(identifier, download_url, project):
+    """Resolve S1 SLC using ASF datapool (ASF or NGAP). Fallback to ESA."""
+
+    # determine best url and corresponding queue
+    vertex_url = "https://datapool.asf.alaska.edu/SLC/SA/{}.zip".format(identifier)
+    r = requests.head(vertex_url, allow_redirects=True)
+    if r.status_code == 403:
+        url = r.url
+        queue = "{}-job_worker-small".format(project)
+    elif r.status_code == 404:
+        url = download_url
+        queue = "factotum-job_worker-scihub_throttled"
+    else:
+        raise RuntimeError("Got status code {} from {}: {}".format(r.status_code, vertex_url, r.url))
+    return url, queue
+
+
 def resolve_source(ctx_file):
     """Resolve best URL from acquisition."""
 
@@ -19,17 +36,15 @@ def resolve_source(ctx_file):
     with open(ctx_file) as f:
         ctx = json.load(f)
 
-    # determine best url and corresponding queue
-    vertex_url = "https://datapool.asf.alaska.edu/SLC/SA/{}.zip".format(ctx['identifier'])
-    r = requests.head(vertex_url, allow_redirects=True)
-    if r.status_code == 403:
-        url = r.url
-        queue = "{}-job_worker-small".format(ctx['project'])
-    elif r.status_code == 404:
-        url = ctx['download_url']
-        queue = "factotum-job_worker-scihub_throttled"
+    # ensure acquisition
+    if ctx['dataset_type'] != "acquisition":
+        raise RuntimeError("Invalid dataset type: {}".format(ctx['dataset_type']))
+
+    # route resolver and return url and queue
+    if ctx['dataset'] == "acquisition-S1-IW_SLC":
+        url, queue = resolve_s1_slc(ctx['identifier'], ctx['download_url'], ctx['project'])
     else:
-        raise RuntimeError("Got status code {} from {}: {}".format(r.status_code, vertex_url, r.url))
+        raise NotImplementedError("Unknown acquisition dataset: {}".format(ctx['dataset']))
 
     return ( ctx['spyddder_extract_version'], queue, url, ctx['archive_filename'], 
              ctx['identifier'], time.strftime('%Y-%m-%d' ) )
