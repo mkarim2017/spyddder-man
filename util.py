@@ -41,9 +41,9 @@ def dataset_exists(id, index_suffix):
         result = r.json()
         total = result['hits']['total']
     else:
-        print("Failed to query %s:\n%s" % (es_url, r.text), file=sys.stderr)
-        print("query: %s" % json.dumps(query, indent=2), file=sys.stderr)
-        print("returned: %s" % r.text, file=sys.stderr)
+        print("Failed to query %s:\n%s" % (es_url, r.text))
+        print("query: %s" % json.dumps(query, indent=2))
+        print("returned: %s" % r.text)
         if r.status_code == 404: total = 0
         else: r.raise_for_status()
     return False if total == 0 else True
