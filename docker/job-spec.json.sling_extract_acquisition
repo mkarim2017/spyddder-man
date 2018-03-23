@@ -1,0 +1,41 @@
+{
+  "command":"/home/ops/verdi/ops/spyddder-man/sling_extract_acquisition.sh",
+  "imported_worker_files": {
+    "/home/ops/.netrc": "/home/ops/.netrc",
+    "/home/ops/.aws": "/home/ops/.aws",
+    "/home/ops/verdi/ops/spyddder-man/settings.json": "/home/ops/verdi/ops/spyddder-man/settings.json"
+  },
+  "disk_usage":"50GB",
+  "soft_time_limit": 14400,
+  "time_limit": 14700,
+  "params" : [
+    {
+        "name": "project",
+        "destination": "context"
+    },
+    {
+        "name": "dataset_type",
+        "destination": "context"
+    },
+    {
+        "name": "dataset",
+        "destination": "context"
+    },
+    {
+        "name": "identifier",
+        "destination": "context"
+    },
+    {
+        "name": "download_url",
+        "destination": "context"
+    },
+    {
+        "name": "archive_filename",
+        "destination": "context"
+    },
+    {
+        "name": "prod_met",
+        "destination": "context"
+    }
+  ]
+}
