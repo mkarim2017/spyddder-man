@@ -1,7 +1,8 @@
 #!/usr/bin/env python 
-import os, time, json, requests, logging
+import os, sys, time, json, requests, logging
 
 from hysds_commons.job_utils import resolve_hysds_job
+from hysds.celery import app
 
 
 log_format = "[%(asctime)s: %(levelname)s/%(name)s/%(funcName)s] %(message)s"
@@ -10,6 +11,42 @@ logger = logging.getLogger(os.path.splitext(os.path.basename(__file__))[0])
 
 
 BASE_PATH = os.path.dirname(__file__)
+
+
+def dataset_exists(id, index_suffix):
+    """Query for existence of dataset by ID."""
+
+    # es_url and es_index
+    es_url = app.conf.GRQ_ES_URL
+    es_index = "grq_*_{}".format(index_suffix.lower())
+    
+    # query
+    query = {
+        "query":{
+            "bool":{
+                "must":[
+                    { "term":{ "_id": id } },
+                ]
+            }
+        },
+        "fields": [],
+    }
+
+    if es_url.endswith('/'):
+        search_url = '%s%s/_search' % (es_url, es_index)
+    else:
+        search_url = '%s/%s/_search' % (es_url, es_index)
+    r = requests.post(search_url, data=json.dumps(query))
+    if r.status_code == 200:
+        result = r.json()
+        total = result['hits']['total']
+    else:
+        print("Failed to query %s:\n%s" % (es_url, r.text), file=sys.stderr)
+        print("query: %s" % json.dumps(query, indent=2), file=sys.stderr)
+        print("returned: %s" % r.text, file=sys.stderr)
+        if r.status_code == 404: total = 0
+        else: r.raise_for_status()
+    return False if total == 0 else True
 
 
 def resolve_s1_slc(identifier, download_url, project):
@@ -32,6 +69,11 @@ def resolve_s1_slc(identifier, download_url, project):
 def resolve_source(ctx_file):
     """Resolve best URL from acquisition."""
 
+    # get settings
+    settings_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'settings.json')
+    with open(settings_file) as f:
+        settings = json.load(f)
+
     # read in context
     with open(ctx_file) as f:
         ctx = json.load(f)
@@ -42,6 +84,9 @@ def resolve_source(ctx_file):
 
     # route resolver and return url and queue
     if ctx['dataset'] == "acquisition-S1-IW_SLC":
+        if dataset_exists(ctx['identifier'], settings['ACQ_TO_DSET_MAP'][ctx['dataset']]):
+            print("Dataset {} already exists.".format(ctx['identifier']))
+            return []
         url, queue = resolve_s1_slc(ctx['identifier'], ctx['download_url'], ctx['project'])
     else:
         raise NotImplementedError("Unknown acquisition dataset: {}".format(ctx['dataset']))
