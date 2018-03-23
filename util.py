@@ -1,6 +1,8 @@
 #!/usr/bin/env python 
 import os, time, json, requests, logging
 
+from hysds_commons.job_utils import resolve_hysds_job
+
 
 log_format = "[%(asctime)s: %(levelname)s/%(name)s/%(funcName)s] %(message)s"
 logging.basicConfig(format=log_format, level=logging.INFO)
@@ -42,50 +44,18 @@ def extract_job(spyddder_extract_version, queue, localize_url, file, prod_name,
 
     # set job type and disk space reqs
     job_type = "job-spyddder-extract:{}".format(spyddder_extract_version)
-    disk_usage = "50GB"
 
-    # set localize urls
-    localize_urls = [{
-        "url": localize_url,
-        "local_path": file,
-    }]
+    # resolve hysds job
+    params = {
+        "localize_url": localize_url,
+        "file": file,
+        "prod_name": prod_name,
+        "prod_date": prod_date,
+    }
+    job = resolve_hysds_job(job_type, queue, params=params, job_name="%s-%s" % (job_type, prod_name))
 
-    # get container mappings and dependency images from job spec
-    job_spec_file = os.path.abspath(os.path.join(BASE_PATH, 'docker', 'job-spec.json.acquisition_localizer'))
-    with open(job_spec_file) as f:
-        job_spec = json.load(f)
-    container_mappings = job_spec.get('imported_worker_files', {})
-    dependency_images = job_spec.get('dependency_images', [])
+    # add workflow info
+    job['payload']['_sciflo_wuid'] = wuid
+    job['payload']['_sciflo_job_num'] = job_num
 
-    return {
-        "job_name": "%s-%s" % (job_type, prod_name),
-        "job_type": "job:%s" % job_type,
-        "job_queue": queue,
-        "container_mappings": container_mappings,
-        "soft_time_limit": 14400,
-        "time_limit": 14700,
-        "payload": {
-            # sciflo tracking info
-            "_sciflo_wuid": wuid,
-            "_sciflo_job_num": job_num,
-
-            # job spec for dependencies
-            "job_specification": {
-              "dependency_images": dependency_images,
-            },
-  
-            # job params
-            "file": file,
-            "prod_name": prod_name,
-            "prod_date": prod_date,
-
-            # v2 cmd
-            "_command": "/home/ops/verdi/ops/spyddder-man/extract.py '{}' '{}' '{}'".format(file, prod_name, prod_date),
-
-            # disk usage
-            "_disk_usage": disk_usage,
-
-            # localize urls
-            "localize_urls": localize_urls,
-        }
-    } 
+    return job
