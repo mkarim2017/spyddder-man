@@ -85,8 +85,7 @@ def resolve_source(ctx_file):
     # route resolver and return url and queue
     if ctx['dataset'] == "acquisition-S1-IW_SLC":
         if dataset_exists(ctx['identifier'], settings['ACQ_TO_DSET_MAP'][ctx['dataset']]):
-            print("Dataset {} already exists.".format(ctx['identifier']))
-            return []
+            raise RuntimeError("Dataset {} already exists.".format(ctx['identifier']))
         url, queue = resolve_s1_slc(ctx['identifier'], ctx['download_url'], ctx['project'])
     else:
         raise NotImplementedError("Unknown acquisition dataset: {}".format(ctx['dataset']))
