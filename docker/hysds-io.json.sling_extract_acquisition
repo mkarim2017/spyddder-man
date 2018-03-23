@@ -3,6 +3,11 @@
   "label": "Sling-Extract Dataset From Acquisition",
   "allowed_accounts": [ "ops" ],
   "params" : [ 
+    {
+      "name": "workflow",
+      "from": "value",
+      "value": "sling_extract_acquisition.sf.xml"
+    },
     { 
       "name": "project",
       "from": "submitter",
