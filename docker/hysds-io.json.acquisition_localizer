@@ -18,7 +18,7 @@
     {
       "name": "spyddder_extract_version",
       "from": "submitter",
-      "type": "text",
+      "type": "jobspec_version",
       "version_regex": "job-spyddder-extract",
       "placeholder": "spyddder-man extract job version"
     },
