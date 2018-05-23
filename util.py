@@ -326,7 +326,7 @@ def resolve_aoi_acqs(ctx_file):
         archive_filenames.append(archive_filename)
         identifiers.append(identifier)
         prod_dates.append(prod_date)
-        priorities.append(priorities)
+        priorities.append(priority)
         aois.append(aoi)
     return ( spyddder_extract_versions, queues, urls, archive_filenames,
              identifiers, prod_dates, priorities, aois )
