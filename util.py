@@ -159,9 +159,9 @@ def query_aois(starttime, endtime):
     return hits
 
 
-def query_aoi_acquisitions(starttime, endtime):
+def query_aoi_acquisitions(starttime, endtime, platform):
     """Query ES for active AOIs that intersect starttime and endtime and 
-       find acquisitions that intersect the AOI polygon."""
+       find acquisitions that intersect the AOI polygon for the platform."""
 
     acq_info = {}
     es_index = "grq_*_*acquisition*"
@@ -176,6 +176,11 @@ def query_aoi_acquisitions(starttime, endtime):
                                 {
                                     "term": {
                                         "dataset_type.raw": "acquisition"
+                                    }
+                                },
+                                {
+                                    "term": {
+                                        "metadata.platform.raw": platform
                                     }
                                 },
                                 {
@@ -281,7 +286,7 @@ def resolve_aoi_acqs(ctx_file):
         ctx = json.load(f)
 
     # get acq_info
-    acq_info = query_aoi_acquisitions(ctx['starttime'], ctx['endtime'])
+    acq_info = query_aoi_acquisitions(ctx['starttime'], ctx['endtime'], ctx['platform'])
 
     # build args
     spyddder_extract_versions = []

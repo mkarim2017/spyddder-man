@@ -28,6 +28,10 @@
     {
         "name": "endtime",
         "destination": "context"
+    },
+    {
+        "name": "platform",
+        "destination": "context"
     }
   ]
 }
