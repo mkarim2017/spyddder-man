@@ -5,9 +5,18 @@ from hysds_commons.job_utils import resolve_hysds_job
 from hysds.celery import app
 
 
+# set logger
 log_format = "[%(asctime)s: %(levelname)s/%(name)s/%(funcName)s] %(message)s"
 logging.basicConfig(format=log_format, level=logging.INFO)
+
+class LogFilter(logging.Filter):
+    def filter(self, record):
+        if not hasattr(record, 'id'): record.id = '--'
+        return True
+
 logger = logging.getLogger(os.path.splitext(os.path.basename(__file__))[0])
+logger.setLevel(logging.INFO)
+logger.addFilter(LogFilter())
 
 
 BASE_PATH = os.path.dirname(__file__)
@@ -49,6 +58,173 @@ def dataset_exists(id, index_suffix):
     return False if total == 0 else True
 
 
+def query_es(query, es_index):
+    """Query ES."""
+
+    es_url = app.conf.GRQ_ES_URL
+    rest_url = es_url[:-1] if es_url.endswith('/') else es_url
+    url = "{}/{}/_search?search_type=scan&scroll=60&size=100".format(rest_url, es_index)
+    #logger.info("url: {}".format(url))
+    r = requests.post(url, data=json.dumps(query))
+    r.raise_for_status()
+    scan_result = r.json()
+    #logger.info("scan_result: {}".format(json.dumps(scan_result, indent=2)))
+    count = scan_result['hits']['total']
+    scroll_id = scan_result['_scroll_id']
+    hits = []
+    while True:
+        r = requests.post('%s/_search/scroll?scroll=60m' % rest_url, data=scroll_id)
+        res = r.json()
+        scroll_id = res['_scroll_id']
+        if len(res['hits']['hits']) == 0: break
+        hits.extend(res['hits']['hits'])
+    return hits
+
+
+def query_aois(starttime, endtime):
+    """Query ES for active AOIs that intersect starttime and endtime."""
+
+    es_index = "grq_*_area_of_interest"
+    query = {
+        "query": {
+            "bool": {
+                "should": [
+                    {
+                        "bool": {
+                            "must": [
+                                {
+                                    "range": {
+                                        "starttime": {
+                                            "lte": endtime
+                                        }
+                                    }
+                                },
+                                {
+                                    "range": {
+                                        "endtime": {
+                                            "gte": starttime
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "filtered": {
+                            "query": {
+                                "range": {
+                                    "starttime": {
+                                        "lte": endtime
+                                    }
+                                }
+                            },
+                            "filter": {
+                                "missing": {
+                                    "field": "endtime"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "filtered": {
+                            "query": {
+                                "range": {
+                                    "endtime": {
+                                        "gte": starttime
+                                    }
+                                }
+                            },
+                            "filter": {
+                                "missing": {
+                                    "field": "starttime"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "partial_fields" : {
+            "partial" : {
+                "include" : [ "id", "starttime", "endtime", "location", "metadata.user_tags" ]
+            }
+        }
+    }
+
+    # filter inactive
+    hits = [i['fields']['partial'][0] for i in query_es(query, es_index) 
+            if 'inactive' not in i['fields']['partial'][0].get('metadata', {}).get('user_tags', [])]
+    #logger.info("hits: {}".format(json.dumps(hits, indent=2)))
+    logger.info("aois: {}".format(json.dumps([i['id'] for i in hits])))
+    return hits
+
+
+def query_aoi_acquisitions(starttime, endtime, platform):
+    """Query ES for active AOIs that intersect starttime and endtime and 
+       find acquisitions that intersect the AOI polygon for the platform."""
+
+    acq_info = {}
+    es_index = "grq_*_*acquisition*"
+    for aoi in query_aois(starttime, endtime):
+        logger.info("aoi: {}".format(aoi['id']))
+        query = {
+            "query": {
+                "filtered": {
+                    "query": {
+                        "bool": {
+                            "must": [
+                                {
+                                    "term": {
+                                        "dataset_type.raw": "acquisition"
+                                    }
+                                },
+                                {
+                                    "term": {
+                                        "metadata.platform.raw": platform
+                                    }
+                                },
+                                {
+                                    "range": {
+                                        "starttime": {
+                                            "lte": endtime
+                                        }
+                                    }
+                                },
+                                {
+                                    "range": {
+                                        "endtime": {
+                                            "gte": starttime
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "filter": {
+                        "geo_shape": {  
+                            "location": {
+                                "shape": aoi['location']
+                            }
+                        }
+                    }
+                }
+            },
+            "partial_fields" : {
+                "partial" : {
+                    "include" : [ "id", "dataset_type", "dataset", "metadata" ]
+                }
+            }
+        }
+        acqs = [i['fields']['partial'][0] for i in query_es(query, es_index)]
+        logger.info("Found {} acqs for {}: {}".format(len(acqs), aoi['id'],
+                    json.dumps([i['id'] for i in acqs], indent=2)))
+        for acq in acqs:
+            if acq['id'] in acq_info: continue
+            acq_info[acq['id']] = acq
+    logger.info("Acquistions to localize: {}".format(json.dumps(acq_info, indent=2)))
+    return acq_info
+    
+
 def resolve_s1_slc(identifier, download_url, project):
     """Resolve S1 SLC using ASF datapool (ASF or NGAP). Fallback to ESA."""
 
@@ -66,17 +242,18 @@ def resolve_s1_slc(identifier, download_url, project):
     return url, queue
 
 
-def resolve_source(ctx_file):
+class DatasetExists(Exception):
+    """Exception class for existing dataset."""
+    pass
+
+
+def resolve_source(ctx):
     """Resolve best URL from acquisition."""
 
     # get settings
     settings_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'settings.json')
     with open(settings_file) as f:
         settings = json.load(f)
-
-    # read in context
-    with open(ctx_file) as f:
-        ctx = json.load(f)
 
     # ensure acquisition
     if ctx['dataset_type'] != "acquisition":
@@ -85,13 +262,60 @@ def resolve_source(ctx_file):
     # route resolver and return url and queue
     if ctx['dataset'] == "acquisition-S1-IW_SLC":
         if dataset_exists(ctx['identifier'], settings['ACQ_TO_DSET_MAP'][ctx['dataset']]):
-            raise RuntimeError("Dataset {} already exists.".format(ctx['identifier']))
+            raise DatasetExists("Dataset {} already exists.".format(ctx['identifier']))
         url, queue = resolve_s1_slc(ctx['identifier'], ctx['download_url'], ctx['project'])
     else:
         raise NotImplementedError("Unknown acquisition dataset: {}".format(ctx['dataset']))
 
     return ( ctx['spyddder_extract_version'], queue, url, ctx['archive_filename'], 
              ctx['identifier'], time.strftime('%Y-%m-%d' ) )
+
+
+def resolve_source_from_ctx_file(ctx_file):
+    """Resolve best URL from acquisition."""
+
+    with open(ctx_file) as f:
+        return resolve_source(json.load(f))
+
+
+def resolve_aoi_acqs(ctx_file):
+    """Resolve best URL from acquisitions from AOIs."""
+
+    # read in context
+    with open(ctx_file) as f:
+        ctx = json.load(f)
+
+    # get acq_info
+    acq_info = query_aoi_acquisitions(ctx['starttime'], ctx['endtime'], ctx['platform'])
+
+    # build args
+    spyddder_extract_versions = []
+    queues = []
+    urls = []
+    archive_filenames = []
+    identifiers = []
+    prod_dates = []
+    for id in sorted(acq_info):
+        acq = acq_info[id]
+        acq['spyddder_extract_version'] = ctx['spyddder_extract_version']
+        acq['project'] = ctx['project']
+        acq['identifier'] = acq['metadata']['identifier']
+        acq['download_url'] = acq['metadata']['download_url']
+        acq['archive_filename'] = acq['metadata']['archive_filename']
+        try:
+            s, q, u, a, i, p = resolve_source(acq)
+        except DatasetExists, e:
+            logger.warning(e)
+            logger.warning("Skipping {}".format(acq['identifier']))
+            continue
+        spyddder_extract_versions.append(s)
+        queues.append(q)
+        urls.append(u)
+        archive_filenames.append(a)
+        identifiers.append(i)
+        prod_dates.append(p)
+    return ( spyddder_extract_versions, queues, urls, archive_filenames,
+             identifiers, prod_dates )
 
 
 def extract_job(spyddder_extract_version, queue, localize_url, file, prod_name,

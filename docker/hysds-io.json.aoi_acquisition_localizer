@@ -1,0 +1,41 @@
+{     
+  "submission_type": "iteration",
+  "label": "Acquisition Resolver/Localizer for AOIs",
+  "allowed_accounts": [ "ops" ],
+  "params" : [ 
+    {
+      "name": "workflow",
+      "from": "value",
+      "value": "aoi_acquisition_localizer.sf.xml"
+    },
+    { 
+      "name": "project",
+      "from": "submitter",
+      "type": "enum",
+      "default": "grfn",
+      "enumerables": ["aria", "grfn", "mem", "urgent-response", "dwr", "chevron"]
+    },
+    {
+      "name": "spyddder_extract_version",
+      "from": "submitter",
+      "type": "jobspec_version",
+      "version_regex": "job-spyddder-extract",
+      "placeholder": "spyddder-man extract job version"
+    },
+    {
+      "name": "starttime",
+      "from": "dataset_jpath:_source.starttime",
+      "type": "text"
+    },
+    {
+      "name": "endtime",
+      "from": "dataset_jpath:_source.endtime",
+      "type": "text"
+    },
+    {
+      "name": "platform",
+      "from": "dataset_jpath:_source.metadata.platform",
+      "type": "text"
+    }
+  ]
+}
