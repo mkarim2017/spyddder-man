@@ -280,7 +280,7 @@ def resolve_aoi_acqs(ctx_file):
         acq = acq_info[id]
         acq['spyddder_extract_version'] = ctx['spyddder_extract_version']
         acq['project'] = ctx['project']
-        acq['indentifier'] = acq['metadata']['identifier']
+        acq['identifier'] = acq['metadata']['identifier']
         acq['download_url'] = acq['metadata']['download_url']
         acq['archive_filename'] = acq['metadata']['archive_filename']
         s, q, u, a, i, p = resolve_source(acq)
