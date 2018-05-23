@@ -29,7 +29,7 @@
         <sf:operator>
           <sf:description></sf:description>
           <sf:op>
-            <sf:binding>python:?util.resolve_source</sf:binding>
+            <sf:binding>python:?util.resolve_source_from_ctx_file</sf:binding>
           </sf:op>
         </sf:operator>
       </sf:process>
