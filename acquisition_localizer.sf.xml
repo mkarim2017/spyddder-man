@@ -25,6 +25,8 @@
           <file/>
           <prod_name/>
           <prod_date/>
+          <priority/>
+          <aoi/>
         </sf:outputs>
         <sf:operator>
           <sf:description></sf:description>
@@ -42,6 +44,8 @@
           <file from="@#previous"/>
           <prod_name from="@#previous"/>
           <prod_date from="@#previous"/>
+          <priority from="@#previous"/>
+          <aoi from="@#previous"/>
         </sf:inputs>
         <sf:outputs>
           <datasets/>

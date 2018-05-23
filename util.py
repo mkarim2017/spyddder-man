@@ -146,7 +146,8 @@ def query_aois(starttime, endtime):
         },
         "partial_fields" : {
             "partial" : {
-                "include" : [ "id", "starttime", "endtime", "location", "metadata.user_tags" ]
+                "include" : [ "id", "starttime", "endtime", "location", 
+                              "metadata.user_tags", "metadata.priority" ]
             }
         }
     }
@@ -219,7 +220,12 @@ def query_aoi_acquisitions(starttime, endtime, platform):
         logger.info("Found {} acqs for {}: {}".format(len(acqs), aoi['id'],
                     json.dumps([i['id'] for i in acqs], indent=2)))
         for acq in acqs:
-            if acq['id'] in acq_info: continue
+            aoi_priority = aoi.get('metadata', {}).get('priority', 0)
+            # ensure highest priority is assigned if multiple AOIs resolve the acquisition
+            if acq['id'] in acq_info and acq_info[acq['id']].get('priority', 0) > aoi_priority:
+                continue
+            acq['aoi'] = aoi['id']
+            acq['priority'] = aoi_priority
             acq_info[acq['id']] = acq
     logger.info("Acquistions to localize: {}".format(json.dumps(acq_info, indent=2)))
     return acq_info
@@ -268,7 +274,8 @@ def resolve_source(ctx):
         raise NotImplementedError("Unknown acquisition dataset: {}".format(ctx['dataset']))
 
     return ( ctx['spyddder_extract_version'], queue, url, ctx['archive_filename'], 
-             ctx['identifier'], time.strftime('%Y-%m-%d' ) )
+             ctx['identifier'], time.strftime('%Y-%m-%d' ), ctx.get('job_priority', 0),
+             ctx.get('aoi', 'no_aoi') )
 
 
 def resolve_source_from_ctx_file(ctx_file):
@@ -295,6 +302,8 @@ def resolve_aoi_acqs(ctx_file):
     archive_filenames = []
     identifiers = []
     prod_dates = []
+    priorities = []
+    aois = []
     for id in sorted(acq_info):
         acq = acq_info[id]
         acq['spyddder_extract_version'] = ctx['spyddder_extract_version']
@@ -302,24 +311,29 @@ def resolve_aoi_acqs(ctx_file):
         acq['identifier'] = acq['metadata']['identifier']
         acq['download_url'] = acq['metadata']['download_url']
         acq['archive_filename'] = acq['metadata']['archive_filename']
+        acq['aoi'] = acq['aoi']
+        acq['job_priority'] = acq['priority']
         try:
-            s, q, u, a, i, p = resolve_source(acq)
+            ( spyddder_extract_version, queue, url, archive_filename, 
+              identifier, prod_date, priority, aoi ) = resolve_source(acq)
         except DatasetExists, e:
             logger.warning(e)
             logger.warning("Skipping {}".format(acq['identifier']))
             continue
-        spyddder_extract_versions.append(s)
-        queues.append(q)
-        urls.append(u)
-        archive_filenames.append(a)
-        identifiers.append(i)
-        prod_dates.append(p)
+        spyddder_extract_versions.append(spyddder_extract_version)
+        queues.append(queue)
+        urls.append(url)
+        archive_filenames.append(archive_filename)
+        identifiers.append(identifier)
+        prod_dates.append(prod_date)
+        priorities.append(priorities)
+        aois.append(aoi)
     return ( spyddder_extract_versions, queues, urls, archive_filenames,
-             identifiers, prod_dates )
+             identifiers, prod_dates, priorities, aois )
 
 
 def extract_job(spyddder_extract_version, queue, localize_url, file, prod_name,
-                prod_date, wuid=None, job_num=None):
+                prod_date, priority, aoi, wuid=None, job_num=None):
     """Map function for spyddder-man extract job."""
 
     if wuid is None or job_num is None:
@@ -334,8 +348,10 @@ def extract_job(spyddder_extract_version, queue, localize_url, file, prod_name,
         "file": file,
         "prod_name": prod_name,
         "prod_date": prod_date,
+        "aoi": aoi,
     }
-    job = resolve_hysds_job(job_type, queue, params=params, job_name="%s-%s" % (job_type, prod_name))
+    job = resolve_hysds_job(job_type, queue, priority=priority, params=params, 
+                            job_name="%s-%s-%s" % (job_type, aoi, prod_name))
 
     # save to archive_filename if it doesn't match url basename
     if os.path.basename(localize_url) != file:
