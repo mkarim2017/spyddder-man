@@ -49,7 +49,7 @@
         <sf:operator>
           <sf:description></sf:description>
           <sf:op>
-            <sf:binding job_queue="jobs_processed" async="true">parallel:python:?util.extract_job</sf:binding>
+            <sf:binding job_queue="jobs_processed" async="true">map:python:?util.extract_job</sf:binding>
           </sf:op>
         </sf:operator>
       </sf:process>
