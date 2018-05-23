@@ -228,6 +228,11 @@ def resolve_s1_slc(identifier, download_url, project):
     return url, queue
 
 
+class DatasetExists(Exception):
+    """Exception class for existing dataset."""
+    pass
+
+
 def resolve_source(ctx):
     """Resolve best URL from acquisition."""
 
@@ -243,7 +248,7 @@ def resolve_source(ctx):
     # route resolver and return url and queue
     if ctx['dataset'] == "acquisition-S1-IW_SLC":
         if dataset_exists(ctx['identifier'], settings['ACQ_TO_DSET_MAP'][ctx['dataset']]):
-            raise RuntimeError("Dataset {} already exists.".format(ctx['identifier']))
+            raise DatasetExists("Dataset {} already exists.".format(ctx['identifier']))
         url, queue = resolve_s1_slc(ctx['identifier'], ctx['download_url'], ctx['project'])
     else:
         raise NotImplementedError("Unknown acquisition dataset: {}".format(ctx['dataset']))
@@ -283,7 +288,12 @@ def resolve_aoi_acqs(ctx_file):
         acq['identifier'] = acq['metadata']['identifier']
         acq['download_url'] = acq['metadata']['download_url']
         acq['archive_filename'] = acq['metadata']['archive_filename']
-        s, q, u, a, i, p = resolve_source(acq)
+        try:
+            s, q, u, a, i, p = resolve_source(acq)
+        except DatasetExists, e:
+            logger.warning(e)
+            logger.warning("Skipping {}".format(acq['identifier']))
+            continue
         spyddder_extract_versions.append(s)
         queues.append(q)
         urls.append(u)
