@@ -5,9 +5,18 @@ from hysds_commons.job_utils import resolve_hysds_job
 from hysds.celery import app
 
 
+# set logger
 log_format = "[%(asctime)s: %(levelname)s/%(name)s/%(funcName)s] %(message)s"
 logging.basicConfig(format=log_format, level=logging.INFO)
+
+class LogFilter(logging.Filter):
+    def filter(self, record):
+        if not hasattr(record, 'id'): record.id = '--'
+        return True
+
 logger = logging.getLogger(os.path.splitext(os.path.basename(__file__))[0])
+logger.setLevel(logging.INFO)
+logger.addFilter(LogFilter())
 
 
 BASE_PATH = os.path.dirname(__file__)
