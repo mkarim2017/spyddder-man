@@ -240,7 +240,7 @@ def resolve_s1_slc(identifier, download_url, project):
         r = requests.head(vertex_url, allow_redirects=True)
     except Exception as err:
         r.status_code = 404
-        logger.info("Error accessing ASF : %s" str(err))       
+        logger.info("Error accessing ASF : %s" %str(err))       
     if r.status_code == 403:
         url = r.url
         queue = "{}-job_worker-small".format(project)
